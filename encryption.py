@@ -8,7 +8,7 @@ import os
 import shutil
 
 USER = getpass.getuser()
-HOME_PATH = '/home/' + USER
+HOME_PATH = '/home/' + USER + '/test-home-dir'
 
 def encrypt_home(password):
     # public_key, private_key = gen_key_rsa(password)
