@@ -4,17 +4,23 @@ from time import sleep
 
 PORT = 8888
 
+
 def add_new_victim():
     print "Adding New Victim"
+
+
+MSG_DICT = {
+    'JOIN': add_new_victim
+}
 
 
 def main():
     while True:
         victim, data = Messenger.listen(PORT)
         print "Victim IP is %s" % (victim)
-        MSG_TYPES.get(data)
+        print data
+        MSG_DICT.get(data)()
 
-MSG_TYPES = {}
-MSG_TYPES['JOIN'] = add_new_victim()
+
 if __name__ == '__main__':
     main()
