@@ -16,7 +16,7 @@ class Messenger():
     def set_up_listening_socket(port):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server_socket.settimeout(10)
+        # server_socket.settimeout(10)
         listen_addr = ("", int(port))
         server_socket.bind(listen_addr)
         return server_socket
