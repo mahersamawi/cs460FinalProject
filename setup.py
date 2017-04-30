@@ -8,8 +8,12 @@ PORT = 3838
 
 
 def main():
+    ip = "10.192.89.234"
+    test = "127.0.0.1"
+    msg = "DOS," + test + ",10" 
+    msg2 = "DOS," + ip + ",2" 
     vict = Victim()
-    vict.processing_thread("DOS, 127.0.0.1, 20")
+    vict.processing_thread(msg)
     return
 
 

