@@ -11,7 +11,8 @@ VICTIM_PORT = 4848
 
 def main():
     test = "127.0.0.1"
-    msg = "JOIN," + test
+    test1 = "10.195.114.134"
+    msg = "JOIN," + test1
     vict = Victim()
 
     vict.process_new_victim("JOIN")

