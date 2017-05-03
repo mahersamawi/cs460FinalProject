@@ -21,9 +21,10 @@ def main():
 
     listen_for_attacks.start()
 
-    while True:
+    '''while True:
         if raw_input() == "EXIT":
             os.system('kill -9 %d' % os.getpid())
+    '''
     listen_for_attacks.join()
 
 

