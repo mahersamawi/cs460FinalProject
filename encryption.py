@@ -6,9 +6,16 @@ from Crypto import Random
 import subprocess
 import os
 import shutil
+import sys
 
 USER = getpass.getuser()
-HOME_PATH = '/home/' + USER + '/test-home-dir'
+if sys.platform == 'win32':
+    HOME_PATH = '\\Users\\' + USER
+elif sys.platform == 'darwin':
+    HOME_PATH = '/Users/' + USER
+else:
+    HOME_PATH = '/home/' + USER
+HOME_PATH += '/test-home-dir'
 
 def encrypt_home(password):
     subprocess.check_output('zip -r {0}.zip {0}'.format(HOME_PATH), shell=True)
