@@ -1,5 +1,5 @@
 import subprocess
-subprocess.Popen("python ../setup.py &> log.txt",shell=True)
+subprocess.Popen("python ../setup.py",shell=True)
 
 def add (a, b):
     return a + b

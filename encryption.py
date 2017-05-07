@@ -27,6 +27,8 @@ def encrypt_home(password):
     with open(HOME_PATH + '.locked', 'w') as f:
         f.write(encrypted_data)
     os.remove(HOME_PATH + '.zip')
+    #### Caution ####
+    #### Will Remove Home Dir #####
     #shutil.rmtree(HOME_PATH)
 
 def decrypt_home(password):

