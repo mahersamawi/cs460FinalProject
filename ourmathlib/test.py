@@ -1,3 +1,3 @@
 import ourmathlib
 
-print ourmathlib.add(5,4)
+print ourmathlib.add(1,2)
